@@ -11,6 +11,10 @@ New features:
 * :doc:`/plugins/substitute`: Allow the replacement string to use capture groups
   from the match. It is thus possible to create more general rules, applying to
   many different artists at once.
+* :doc:`plugins/lyrics`: Add new configuration option ``dist_thresh`` to
+  control the maximum allowed distance between the lyrics search result and the
+  tagged item's artist and title. This is useful for preventing false positives
+  when fetching lyrics.
 
 Bug fixes:
 
@@ -28,6 +32,9 @@ Bug fixes:
   ``lrclib`` over other sources since it returns reliable results quicker than
   others.
   :bug:`5102`
+* :doc:`plugins/lyrics`: Fix the issue with ``genius`` backend not being able
+  to match lyrics when there is a slight variation in the artist name.
+  :bug:`4791`
 
 For packagers:
 
