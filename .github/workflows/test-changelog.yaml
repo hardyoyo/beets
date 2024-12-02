@@ -28,7 +28,7 @@ jobs:
 
       - name: Obtain the changelog
         id: generate_changelog
-        run: |
+        run: |-
           {
             echo 'changelog<<EOF'
             poe --quiet changelog
