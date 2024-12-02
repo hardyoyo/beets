@@ -6,8 +6,6 @@ jobs:
   build:
     name: Get changelog
     runs-on: ubuntu-latest
-    outputs:
-      changelog: ${{ steps.generate_changelog.outputs.changelog }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -30,22 +28,29 @@ jobs:
         id: generate_changelog
         run: |-
           {
-            echo 'changelog<<EOF'
+            echo "### Commit: ${{ github.sha }}"
+            echo "### Changelog:"
+            echo
             poe --quiet changelog
-            echo EOF
-          } >> "$GITHUB_OUTPUT"
+          } > changelog.md
+
+      - name: Store the changelog
+        uses: actions/upload-artifact@v4
+        with:
+          name: changelog
+          path: changelog.md
   test:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
     needs: build
-    env:
-      CHANGELOG: ${{ needs.build.outputs.changelog }}
     steps:
+      - name: Retrieve the changelog
+        uses: actions/download-artifact@v4
+        with:
+          name: changelog
+          path: changelog.md
+
       - uses: mshick/add-pr-comment@v2
         with:
-          message: |-
-            ### Commit: ${{ github.sha }}
-            ### Changelog:
-
-            ${{ env.CHANGELOG }}
+          message-path: changelog.md
